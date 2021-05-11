@@ -1,12 +1,13 @@
-const router = require('express').Router();
-const { errors, celebrate, Joi } = require('celebrate');
-const usersRouter = require('./users');
-const moviesRouter = require('./movies');
-const { createUser, login, signOut } = require('../controllers/users');
-const auth = require('../middlewares/auth');
-const errorsHandler = require('../middlewares/errors-handler');
-const ErrorWithStatusCode = require('../middlewares/error-with-status-code');
-const { requestLogger, errorLogger } = require('../middlewares/logger');
+import { Router } from 'express';
+import { errors, celebrate, Joi } from 'celebrate';
+import { usersRouter } from './users';
+import { moviesRouter } from './movies';
+import { createUser, login, signOut } from '../controllers/users';
+import { auth } from '../middlewares/auth';
+import { errorsHandler } from '../middlewares/errors-handler';
+import { ErrorWithStatusCode } from '../middlewares/error-with-status-code';
+import { requestLogger, errorLogger } from '../middlewares/logger';
+const router = Router();
 
 router.use(requestLogger);
 router.post('/signin', celebrate({
@@ -32,4 +33,4 @@ router.use(errorLogger);
 router.use(errors());
 router.use(errorsHandler);
 
-module.exports = router;
+export { router };

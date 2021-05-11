@@ -1,11 +1,14 @@
+import express from 'express';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import { router } from './routes/index';
+
 require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-/* const cors = require('cors');
+
+/* import cors from 'cors';
 
 const corsWhiteList = ['http://kino.flitman.ru', 'https://kino.flitman.ru'];
 
@@ -18,7 +21,6 @@ const corsOptions = {
   credentials: true,
 };
  */
-const router = require('./routes/index');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -40,5 +42,4 @@ app.use(helmet());
 // app.use(cors(corsOptions));
 app.use('/', router);
 
-app.listen(PORT, () => {
-});
+app.listen(PORT, () => {});

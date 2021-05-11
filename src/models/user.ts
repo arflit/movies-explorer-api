@@ -1,6 +1,17 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const ErrorWithStatusCode = require('../middlewares/error-with-status-code');
+import mongoose, { Document, Model   } from 'mongoose';
+import bcrypt from 'bcryptjs';
+import { ErrorWithStatusCode } from '../middlewares/error-with-status-code';
+
+
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface IUserAPI extends Model<IUser> {
+  findUserByCredentials(a: string, b: string): Promise<IUser>;
+}
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -14,7 +25,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     validate: {
-      validator(v) {
+      validator(v: string) {
         return /[-.\w]+@([\w-]+\.)+[\w-]+/i.test(v);
       },
       message: 'передан некорректный адрес электронной почты',
@@ -28,7 +39,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({ email }).select('+password')
+  return (this as mongoose.Model<IUser>).findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return Promise.reject(new ErrorWithStatusCode(401, 'Неправильные почта или пароль'));
@@ -45,4 +56,4 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     });
 };
 
-module.exports = mongoose.model('user', userSchema);
+export const User = mongoose.model<IUser, IUserAPI>('user', userSchema);

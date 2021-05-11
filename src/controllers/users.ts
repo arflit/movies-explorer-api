@@ -1,11 +1,12 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const User = require('../models/user');
-const ErrorWithStatusCode = require('../middlewares/error-with-status-code');
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import { User } from '../models/user';
+import { ErrorWithStatusCode } from '../middlewares/error-with-status-code';
+import { RequestHandler } from 'express';
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET = 'dev-secret' } = process.env;
 
-module.exports.createUser = (req, res, next) => {
+export const createUser: RequestHandler = (req, res, next) => {
   const { name, email, password } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
@@ -24,12 +25,15 @@ module.exports.createUser = (req, res, next) => {
     });
 };
 
-module.exports.login = (req, res, next) => {
+export const login: RequestHandler = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => User.findById(user._id))
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+      if (!user) {
+        throw new ErrorWithStatusCode(500, 'ошибка сервера')
+      }
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET,
         { expiresIn: '7d' });
       res
         .cookie('jwt', token, {
@@ -43,19 +47,22 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.signOut = (req, res) => {
+export const signOut: RequestHandler = (req, res) => {
   res.clearCookie('jwt').send({ massege: 'cookie удалена!' });
 };
 
-module.exports.getUserInfo = (req, res, next) => {
+export const getUserInfo: RequestHandler = (req, res, next) => {
   User.findById(req.user)
     .orFail(new ErrorWithStatusCode(404, 'Пользователь не найден'))
     .then((user) => res.send(user))
     .catch(next);
 };
 
-module.exports.updateUserInfo = (req, res, next) => {
+export const updateUserInfo: RequestHandler = (req, res, next) => {
   const { name, email } = req.body;
+  if (req.user === undefined) {
+    throw new ErrorWithStatusCode(500, 'ошибка сервера')
+  }
   User.findByIdAndUpdate(req.user._id, { name, email }, { runValidators: true, new: true })
     .then((user) => res.send(user))
     .catch((err) => {
@@ -71,3 +78,4 @@ module.exports.updateUserInfo = (req, res, next) => {
       next(err);
     });
 };
+

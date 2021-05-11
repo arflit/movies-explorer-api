@@ -1,29 +1,31 @@
-const router = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
-const {
+import { Router } from 'express';
+import { celebrate, Joi } from 'celebrate';
+import {
   getMovies, createMovie, deleteMovie,
-} = require('../controllers/movies');
+} from '../controllers/movies';
 
-router.get('/', getMovies);
-router.post('/', /* celebrate({
+const moviesRouter = Router();
+
+moviesRouter.get('/', getMovies);
+moviesRouter.post('/', celebrate({
   body: Joi.object().keys({
     country: Joi.string().required().min(2).max(30),
     director: Joi.string().required().min(2).max(30),
-    duration: ,
+    duration: Joi.number().required(),
     year: Joi.string().required().min(4).max(4),
     description: Joi.string().required().min(2),
     image: Joi.string().required().pattern(/^(https?:\/\/)(www\.)?([\da-z-.]+)\.([a-z.]{2,6})[\da-zA-Z-._~:?#[\]@!$&'()*+,;=/]*\/?#?$/i),
     trailer: Joi.string().required().pattern(/^(https?:\/\/)(www\.)?([\da-z-.]+)\.([a-z.]{2,6})[\da-zA-Z-._~:?#[\]@!$&'()*+,;=/]*\/?#?$/i),
     thumbnail: Joi.string().required().pattern(/^(https?:\/\/)(www\.)?([\da-z-.]+)\.([a-z.]{2,6})[\da-zA-Z-._~:?#[\]@!$&'()*+,;=/]*\/?#?$/i),
-    movieId: Joi.string().hex().length(24),
+    movieId: Joi.number().required(),
     nameRU: Joi.string().required().min(2).max(30),
     nameEN: Joi.string().required().min(2).max(30),
   }),
-}), */ createMovie);
-router.delete('/:movieId', celebrate({
+}), createMovie);
+moviesRouter.delete('/:movieId', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().hex().length(24),
+    movieId: Joi.string().hex().length(24),
   }),
 }), deleteMovie);
 
-module.exports = router;
+export { moviesRouter };

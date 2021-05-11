@@ -5,8 +5,11 @@
   "main": "app.js",
   "scripts": {
     "lint": "npx eslint .",
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "build": "npx tsc",
+    "start": "node dist/app.js",
+    "dev": "npx tsc --watch",
+    "predeploy": "npm run build",
+    "deploy": "scp -r ./dist/* arflit@178.154.245.130:/home/arflit/kino-backend1"
   },
   "repository": {
     "type": "git",
@@ -15,6 +18,14 @@
   "author": "Arkady Flitman",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.11",
+    "@types/express-rate-limit": "^5.1.1",
+    "@types/jsonwebtoken": "^8.5.1",
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "@typescript-eslint/parser": "^4.23.0",
     "eslint": "^7.23.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",

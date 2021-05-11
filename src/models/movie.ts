@@ -1,4 +1,8 @@
-const mongoose = require('mongoose');
+import mongoose, { Document } from 'mongoose';
+
+export interface IMovie extends Document {
+  owner: string;
+}
 
 const movieSchema = new mongoose.Schema({
   country: {
@@ -25,7 +29,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(v) {
+      validator(v: string) {
         return /^(https?:\/\/)(www\.)?([\da-z-.]+)\.([a-z.]{2,6})[\da-zA-Z-._~:?#[\]@!$&'()*+,;=/]*\/?#?$/i.test(v);
       },
       message: 'передан некорректный URL изображения постера',
@@ -35,7 +39,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(v) {
+      validator(v: string) {
         return /^(https?:\/\/)(www\.)?([\da-z-.]+)\.([a-z.]{2,6})[\da-zA-Z-._~:?#[\]@!$&'()*+,;=/]*\/?#?$/i.test(v);
       },
       message: 'передан некорректный URL трейлера ',
@@ -45,7 +49,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(v) {
+      validator(v: string) {
         return /^(https?:\/\/)(www\.)?([\da-z-.]+)\.([a-z.]{2,6})[\da-zA-Z-._~:?#[\]@!$&'()*+,;=/]*\/?#?$/i.test(v);
       },
       message: 'передан некорректный URL изображения постера',
@@ -70,4 +74,4 @@ const movieSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('movie', movieSchema);
+export const Movie = mongoose.model<IMovie>('movie', movieSchema);

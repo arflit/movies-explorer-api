@@ -1,8 +1,8 @@
-const Movie = require('../models/movie');
+import { Movie } from '../models/movie';
+import { ErrorWithStatusCode } from '../middlewares/error-with-status-code';
+import { RequestHandler } from 'express';
 
-const ErrorWithStatusCode = require('../middlewares/error-with-status-code');
-
-module.exports.getMovies = (req, res, next) => {
+export const getMovies: RequestHandler = (req, res, next) => {
   Movie.find({})
     .then((movies) => {
       res.send(movies);
@@ -10,7 +10,7 @@ module.exports.getMovies = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.createMovie = (req, res, next) => {
+export const createMovie: RequestHandler = (req, res, next) => {
   const {
     country,
     director,
@@ -24,6 +24,9 @@ module.exports.createMovie = (req, res, next) => {
     nameRU,
     nameEN,
   } = req.body;
+  if (req.user === undefined) {
+    throw new ErrorWithStatusCode(500, 'ошибка сервера')
+  }
   Movie.create({
     country,
     director,
@@ -47,13 +50,16 @@ module.exports.createMovie = (req, res, next) => {
     });
 };
 
-module.exports.deleteMovie = (req, res, next) => {
+export const deleteMovie: RequestHandler = (req, res, next) => {
   Movie.findById(req.params.movieId)
     .then((movie) => {
       if (!movie) {
         throw new ErrorWithStatusCode(404, 'Карточка не найдена');
       }
-      if (!movie.owner.equals(req.user._id)) {
+      if (req.user === undefined) {
+        throw new ErrorWithStatusCode(500, 'ошибка сервера')
+      }
+      if (movie.owner.toString() !== req.user._id) {
         throw new ErrorWithStatusCode(
           403,
           'Вы пытаетесь удалить фильм из чужой коллекции',
