@@ -51,7 +51,7 @@ var login = function (req, res, next) {
 };
 exports.login = login;
 var signOut = function (req, res) {
-    res.clearCookie('jwt').send({ massege: 'cookie удалена!' });
+    res.clearCookie('jwt').send({ massege: 'Вы успешно разлогинились!' });
 };
 exports.signOut = signOut;
 var getUserInfo = function (req, res, next) {
