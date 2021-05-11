@@ -20,7 +20,7 @@ API поддерживает следующие запросы:
 * `PATCH /users/me` - роут для изменения данных о пользователе, обязательно передать email, name. 
 ##### Кинофильмы
 * `GET /movies` - возвращает массив со всеми фильмами, котоыре пользователь добавил в коллекцию
-* `POST /movies` - добавляет фильм в коллекцию. Обязательные поля: country, director, duration, year, description, image, trailer, nameRU, nameEN, thumbnail, movieId. Возвращает массив с коллекцией фильмов пользователя. 
+* `POST /movies` - добавляет фильм в коллекцию. Обязательные поля: country, director, duration, year, description, image, trailer, nameRU, nameEN, thumbnail, movieId. Возвращает добавленный фильм. 
 * `DELETE /movies/movieId` - удаляет из коллекции фильм по ID. 
 
 ### Использованы следующие технологии: 

@@ -6,8 +6,9 @@
   "scripts": {
     "lint": "npx eslint .",
     "build": "npx tsc",
-    "start": "node dist/app.js",
-    "dev": "npx tsc --watch",
+    "start": "npx tsc && node dist/app.js",
+    "dev": "npx tsc && node dist/app.js",
+    "dev-ts": "npx tsc --watch",
     "predeploy": "npm run build",
     "deploy": "scp -r ./dist/* arflit@178.154.245.130:/home/arflit/kino-backend1"
   },
