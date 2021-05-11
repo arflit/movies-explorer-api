@@ -4,7 +4,10 @@ exports.deleteMovie = exports.createMovie = exports.getMovies = void 0;
 var movie_1 = require("../models/movie");
 var error_with_status_code_1 = require("../middlewares/error-with-status-code");
 var getMovies = function (req, res, next) {
-    movie_1.Movie.find({})
+    if (req.user === undefined) {
+        throw new error_with_status_code_1.ErrorWithStatusCode(500, 'ошибка сервера');
+    }
+    movie_1.Movie.find({ owner: req.user._id })
         .then(function (movies) {
         res.send(movies);
     })
@@ -43,15 +46,11 @@ var deleteMovie = function (req, res, next) {
     movie_1.Movie.findById(req.params.movieId)
         .then(function (movie) {
         if (!movie) {
-            throw new error_with_status_code_1.ErrorWithStatusCode(404, 'Карточка не найдена');
+            throw new error_with_status_code_1.ErrorWithStatusCode(404, 'Фильм не найден');
         }
         if (req.user === undefined) {
             throw new error_with_status_code_1.ErrorWithStatusCode(500, 'ошибка сервера');
         }
-        console.log(movie.owner);
-        console.log(req.user._id);
-        console.log(typeof (movie.owner));
-        console.log(typeof (req.user._id));
         if (movie.owner.toString() !== req.user._id) {
             throw new error_with_status_code_1.ErrorWithStatusCode(403, 'Вы пытаетесь удалить фильм из чужой коллекции');
         }

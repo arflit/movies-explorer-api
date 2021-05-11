@@ -3,7 +3,10 @@ import { ErrorWithStatusCode } from '../middlewares/error-with-status-code';
 import { RequestHandler } from 'express';
 
 export const getMovies: RequestHandler = (req, res, next) => {
-  Movie.find({})
+  if (req.user === undefined) {
+    throw new ErrorWithStatusCode(500, 'ошибка сервера')
+  }
+  Movie.find({ owner: req.user._id })
     .then((movies) => {
       res.send(movies);
     })
@@ -54,7 +57,7 @@ export const deleteMovie: RequestHandler = (req, res, next) => {
   Movie.findById(req.params.movieId)
     .then((movie) => {
       if (!movie) {
-        throw new ErrorWithStatusCode(404, 'Карточка не найдена');
+        throw new ErrorWithStatusCode(404, 'Фильм не найден');
       }
       if (req.user === undefined) {
         throw new ErrorWithStatusCode(500, 'ошибка сервера')

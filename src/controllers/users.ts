@@ -48,7 +48,7 @@ export const login: RequestHandler = (req, res, next) => {
 };
 
 export const signOut: RequestHandler = (req, res) => {
-  res.clearCookie('jwt').send({ massege: 'cookie удалена!' });
+  res.clearCookie('jwt').send({ massege: 'Вы успешно разлогинились!' });
 };
 
 export const getUserInfo: RequestHandler = (req, res, next) => {
