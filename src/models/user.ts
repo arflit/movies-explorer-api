@@ -1,7 +1,6 @@
-import mongoose, { Document, Model   } from 'mongoose';
+import mongoose, { Document, Model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { ErrorWithStatusCode } from '../middlewares/error-with-status-code';
-
 
 export interface IUser extends Document {
   name: string;
@@ -38,7 +37,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.statics.findUserByCredentials = function (email, password) {
+userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
   return (this as mongoose.Model<IUser>).findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {

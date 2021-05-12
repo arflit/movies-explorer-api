@@ -42,4 +42,4 @@ app.use(helmet());
 // app.use(cors(corsOptions));
 app.use('/', router);
 
-app.listen(PORT, () => {});
+app.listen(PORT);

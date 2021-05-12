@@ -41,4 +41,4 @@ app.use(cookie_parser_1.default());
 app.use(helmet_1.default());
 // app.use(cors(corsOptions));
 app.use('/', index_1.router);
-app.listen(PORT, function () { });
+app.listen(PORT);

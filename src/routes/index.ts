@@ -7,6 +7,7 @@ import { auth } from '../middlewares/auth';
 import { errorsHandler } from '../middlewares/errors-handler';
 import { ErrorWithStatusCode } from '../middlewares/error-with-status-code';
 import { requestLogger, errorLogger } from '../middlewares/logger';
+
 const router = Router();
 
 router.use(requestLogger);

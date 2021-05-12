@@ -1,10 +1,10 @@
+import { RequestHandler } from 'express';
 import { Movie } from '../models/movie';
 import { ErrorWithStatusCode } from '../middlewares/error-with-status-code';
-import { RequestHandler } from 'express';
 
 export const getMovies: RequestHandler = (req, res, next) => {
   if (req.user === undefined) {
-    throw new ErrorWithStatusCode(500, 'ошибка сервера')
+    throw new ErrorWithStatusCode(500, 'ошибка сервера');
   }
   Movie.find({ owner: req.user._id })
     .then((movies) => {
@@ -28,7 +28,7 @@ export const createMovie: RequestHandler = (req, res, next) => {
     nameEN,
   } = req.body;
   if (req.user === undefined) {
-    throw new ErrorWithStatusCode(500, 'ошибка сервера')
+    throw new ErrorWithStatusCode(500, 'ошибка сервера');
   }
   Movie.create({
     country,
@@ -60,7 +60,7 @@ export const deleteMovie: RequestHandler = (req, res, next) => {
         throw new ErrorWithStatusCode(404, 'Фильм не найден');
       }
       if (req.user === undefined) {
-        throw new ErrorWithStatusCode(500, 'ошибка сервера')
+        throw new ErrorWithStatusCode(500, 'ошибка сервера');
       }
       if (movie.owner.toString() !== req.user._id) {
         throw new ErrorWithStatusCode(

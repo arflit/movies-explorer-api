@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { RequestHandler } from 'express';
 import { User } from '../models/user';
 import { ErrorWithStatusCode } from '../middlewares/error-with-status-code';
-import { RequestHandler } from 'express';
 
 const { JWT_SECRET = 'dev-secret' } = process.env;
 
@@ -31,7 +31,7 @@ export const login: RequestHandler = (req, res, next) => {
     .then((user) => User.findById(user._id))
     .then((user) => {
       if (!user) {
-        throw new ErrorWithStatusCode(500, 'ошибка сервера')
+        throw new ErrorWithStatusCode(500, 'ошибка сервера');
       }
       const token = jwt.sign({ _id: user._id }, JWT_SECRET,
         { expiresIn: '7d' });
@@ -61,7 +61,7 @@ export const getUserInfo: RequestHandler = (req, res, next) => {
 export const updateUserInfo: RequestHandler = (req, res, next) => {
   const { name, email } = req.body;
   if (req.user === undefined) {
-    throw new ErrorWithStatusCode(500, 'ошибка сервера')
+    throw new ErrorWithStatusCode(500, 'ошибка сервера');
   }
   User.findByIdAndUpdate(req.user._id, { name, email }, { runValidators: true, new: true })
     .then((user) => res.send(user))
@@ -78,4 +78,3 @@ export const updateUserInfo: RequestHandler = (req, res, next) => {
       next(err);
     });
 };
-
